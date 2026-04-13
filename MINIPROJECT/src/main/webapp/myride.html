@@ -1,0 +1,395 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Rides - RideSync</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+    background: linear-gradient(135deg,#020617,#0f172a);
+    font-family: 'Poppins', sans-serif;
+}
+
+.container-box {
+    max-width: 1000px;
+    margin: 40px auto;
+}
+
+.glass {
+    background: rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 20px;
+    color: white;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 20px;
+    transition: 0.3s;
+}
+
+.glass:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(56,189,248,0.6);
+}
+
+h2 {
+    background: linear-gradient(90deg,#38bdf8,#a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.btn-danger {
+    background: #ef4444;
+    border: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container-box">
+
+<a href="index.html" class="btn btn-outline-light mb-3">⬅ Back</a>
+
+<h2 class="mb-4">🚗 My Rides</h2>
+
+<div id="ridesContainer"></div>
+
+</div>
+
+<script>
+
+// 🔥 DELETE FUNCTION
+function deleteRide(id) {
+
+    if(confirm("Are you sure you want to delete this ride?")) {
+
+        fetch("http://localhost:8080/MINIPROJECT/DeleteRideServlet?id=" + id)
+        .then(() => {
+            location.reload(); // refresh after delete
+        })
+        .catch(err => console.error("Delete error:", err));
+    }
+}
+
+window.onload = function () {
+
+    fetch("http://localhost:8080/MINIPROJECT/ViewRidesServlet")
+    .then(res => res.json())
+    .then(data => {
+
+        const container = document.getElementById("ridesContainer");
+        container.innerHTML = "";
+
+        if (!data || data.length === 0) {
+            container.innerHTML = "<p class='text-white'>No rides found 🚫</p>";
+            return;
+        }
+
+        data.forEach((ride, index) => {
+
+            let badgeClass = (index % 2 === 0) ? "bg-success" : "bg-warning";
+            let badgeText = (index % 2 === 0) ? "Active" : "Pending";
+
+            let card = document.createElement("div");
+            card.className = "glass";
+
+            // 🔥 IMPORTANT: pass ride.id here
+            card.innerHTML = `
+                <div class="d-flex justify-content-between">
+                    <h5>${ride.source} → ${ride.destination}</h5>
+                    <span class="badge ${badgeClass}">${badgeText}</span>
+                </div>
+
+                <p>📍 Pickup: ${ride.source}</p>
+                <p>📍 Drop: ${ride.destination}</p>
+                <p>🛣 Distance: ${ride.distance} km</p>
+                <p>⏱ Time: ${ride.time} mins</p>
+                <p>💰 Fare: ₹${ride.fare}</p>
+                <p>💺 Seats: ${ride.seats}</p>
+
+                <button class="btn btn-danger mt-2" onclick="deleteRide(${ride.id})">
+                    Delete
+                </button>
+            `;
+
+            container.appendChild(card);
+        });
+
+    })
+    .catch(err => {
+        console.error("Fetch Error:", err);
+        document.getElementById("ridesContainer").innerHTML =
+            "<p class='text-danger'>Error loading rides</p>";
+    });
+
+};
+</script>
+
+</body>
+</html>-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Rides - SafarMate</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+
+/* ROOT */
+:root{
+  --bg:#0b0f1a;
+  --purple:#7c3aed;
+  --pink:#ff4ecd;
+  --text:#cbd5f5;
+}
+
+body{
+  margin:0;
+  font-family:Poppins;
+  background:var(--bg);
+  color:#fff;
+}
+
+/* HEADER NAV */
+header{
+  display:flex;
+  justify-content:space-between;
+  padding:16px 6%;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(10px);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.logo img{height:45px;}
+.logo span{
+  font-family:Playfair Display;
+  font-size:26px;
+  background:linear-gradient(90deg,var(--pink),var(--purple));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+nav{
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+nav a{
+  color:#ddd;
+  text-decoration:none;
+}
+nav a:hover{color:#fff;}
+
+/* 🔥 NEW HEADER */
+.custom-header{
+  width:100%;
+  padding:60px 20px;
+  text-align:center;
+
+  background:
+  linear-gradient(135deg, rgba(11,15,26,0.95), rgba(124,58,237,0.4));
+
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.custom-header h1{
+  font-family:Playfair Display;
+  font-size:46px;
+  margin:0;
+
+  background:linear-gradient(90deg,#ff4ecd,#7c3aed);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.custom-header p{
+  margin-top:12px;
+  font-size:16px;
+  color:#cbd5f5;
+}
+
+/* BACK */
+.back{
+  display:block;
+  width:fit-content;
+  margin:20px auto;
+  color:#aaa;
+  text-decoration:none;
+}
+.back:hover{color:#fff;}
+
+/* GRID */
+.rides-grid{
+  max-width:1100px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;
+  padding-bottom:80px;
+}
+
+/* CARD */
+.ride-card{
+  background:rgba(255,255,255,0.04);
+  padding:20px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.08);
+  transition:.3s;
+}
+
+.ride-card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 0 25px rgba(255,78,205,0.25);
+}
+
+.ride-route{
+  font-size:18px;
+  font-weight:600;
+  margin-bottom:10px;
+}
+
+/* INFO */
+.ride-info{
+  font-size:14px;
+  color:var(--text);
+  margin:6px 0;
+}
+
+.ride-info i{
+  margin-right:6px;
+  color:var(--pink);
+}
+
+/* BADGE */
+.badge{
+  padding:5px 10px;
+  border-radius:8px;
+  font-size:12px;
+}
+
+.active{ background:#22c55e; }
+.pending{ background:#facc15; color:#000; }
+
+/* DELETE */
+.delete-btn{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#ef4444;
+  color:white;
+  cursor:pointer;
+}
+
+.delete-btn:hover{
+  opacity:0.8;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header>
+<div class="logo">
+<img src="logo.png">
+<span>SafarMate</span>
+</div>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="add.html">Add Ride</a>
+<a href="myride.html">My Rides</a>
+<a href="match2.html">Matches</a>
+</nav>
+</header>
+
+<!-- 🔥 NEW HEADER -->
+<div class="custom-header">
+<h1>My Rides</h1>
+<p>Your added rides</p>
+</div>
+
+<a href="index.html" class="back">⬅ Back to Home</a>
+
+<!-- GRID -->
+<div class="rides-grid" id="ridesContainer"></div>
+
+<script>
+
+// DELETE
+function deleteRide(id) {
+    if(confirm("Delete this ride?")) {
+        fetch("http://localhost:8080/MINIPROJECT/DeleteRideServlet?id=" + id)
+        .then(() => location.reload())
+        .catch(err => console.log(err));
+    }
+}
+
+window.onload = function () {
+
+    fetch("http://localhost:8080/MINIPROJECT/ViewRidesServlet")
+    .then(res => res.json())
+    .then(data => {
+
+        let container = document.getElementById("ridesContainer");
+        container.innerHTML = "";
+
+        if (!data || data.length === 0) {
+            container.innerHTML = "<p style='text-align:center'>No rides found 🚫</p>";
+            return;
+        }
+
+        data.forEach((ride, index) => {
+
+            let statusClass = (index % 2 === 0) ? "active" : "pending";
+            let statusText = (index % 2 === 0) ? "Active" : "Pending";
+
+            container.innerHTML += `
+            <div class="ride-card">
+
+                <div style="display:flex;justify-content:space-between;">
+                    <div class="ride-route">
+                        <i class="bi bi-geo-alt-fill"></i> ${ride.source} → ${ride.destination}
+                    </div>
+                    <span class="badge ${statusClass}">${statusText}</span>
+                </div>
+
+                <div class="ride-info"><i class="bi bi-signpost"></i> ${ride.distance} km</div>
+                <div class="ride-info"><i class="bi bi-clock"></i> ${ride.time} mins</div>
+                <div class="ride-info"><i class="bi bi-currency-rupee"></i> ₹${ride.fare}</div>
+                <div class="ride-info"><i class="bi bi-person"></i> ${ride.driver}</div>
+                <div class="ride-info"><i class="bi bi-people"></i> ${ride.seats} seats</div>
+
+                <button class="delete-btn" onclick="deleteRide(${ride.id})">
+                    🗑 Delete Ride
+                </button>
+
+            </div>`;
+        });
+
+    })
+    .catch(() => {
+        document.getElementById("ridesContainer").innerHTML =
+        "<p style='text-align:center;color:red;'>Error loading rides</p>";
+    });
+
+};
+</script>
+
+</body>
+</html>
