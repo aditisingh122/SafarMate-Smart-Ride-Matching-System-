@@ -1,7 +1,0 @@
-com\mycompany\miniproject\resources\JakartaEE10Resource.class
-com\mycompany\miniproject\JakartaRestConfiguration.class
-MINIPROJECT\JoinRideServlet.class
-MINIPROJECT\ViewRidesServlet.class
-MINIPROJECT\MatchServlet.class
-MINIPROJECT\DeleteRideServlet.class
-MINIPROJECT\AddRideServlet.class
